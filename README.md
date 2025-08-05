@@ -182,31 +182,87 @@ The first time you start the server, it will automatically download the KittenTT
 
 4.  **To stop the server:** Press `CTRL+C` in the terminal.
 
-## 🐳 Docker Installation (Optional)
+## 🐳 Docker Installation
 
-Run Kitten TTS Server easily in a containerized environment.
+Run Kitten-TTS-Server easily using Docker. The recommended method uses Docker Compose, which is pre-configured for both CPU and NVIDIA GPU deployment.
 
 ### Prerequisites
-*   [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/) installed.
-*   **(For GPU)** [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html) installed.
 
-### Using Docker Compose
+*   [Docker](https://docs.docker.com/get-docker/) installed.
+*   [Docker Compose](https://docs.docker.com/compose/install/) installed (usually included with Docker Desktop).
+*   **(For GPU acceleration)**
+    *   An NVIDIA GPU.
+    *   Up-to-date NVIDIA drivers for your host operating system.
+    *   The [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html) installed.
 
-**1. Start the Container**
+### Using Docker Compose (Recommended)
 
-*   **For NVIDIA GPU:**
+This method uses the provided `docker-compose.yml` files to automatically build the correct image and manage the container, volumes, and configuration.
+
+**1. Clone the Repository**
+```bash
+git clone https://github.com/devnen/Kitten-TTS-Server.git
+cd Kitten-TTS-Server
+```
+
+**2. Start the Container Based on Your Hardware**
+
+Choose one of the following commands:
+
+#### **For NVIDIA GPU (Recommended for Performance):**
+The default `docker-compose.yml` is configured for NVIDIA GPUs. It will build the image with full CUDA support.
+
+```bash
+docker compose up -d --build
+```
+
+#### **For CPU-only:**
+This uses a dedicated compose file that builds the image without GPU dependencies.
+
+```bash
+docker compose -f docker-compose-cpu.yml up -d --build
+```
+
+⭐ **Note:** The first time you run this, Docker will build the image and the server will download the KittenTTS model, which can take a few minutes. Subsequent starts will be much faster.
+
+### 3. Access and Manage the Application
+
+*   **Access the Web UI:** Open your browser to `http://localhost:8005`
+*   **Access the API Docs:** `http://localhost:8005/docs`
+
+*   **View Logs:**
     ```bash
-    docker compose up -d --build
-    ```
-*   **For CPU-only:**
-    ```bash
-    docker compose -f docker-compose-cpu.yml up -d --build
+    # For GPU or CPU version
+    docker compose logs -f
     ```
 
-**2. Access and Manage**
-*   **Access UI:** `http://localhost:8005`
-*   **View Logs:** `docker compose logs -f`
-*   **Stop:** `docker compose down`
+*   **Stop the Container:**
+    ```bash
+    # This stops and removes the container but keeps your data volumes
+    docker compose down
+    ```
+
+### How It Works
+
+*   **Build-time Argument:** The `Dockerfile` uses a `RUNTIME` argument (`nvidia` or `cpu`) to conditionally install the correct Python packages, creating an optimized image for your hardware.
+*   **Persistent Data:** The `docker-compose` files use Docker volumes to persist your important data on your host machine, even if the container is removed:
+    *   `./config.yaml`: Your main server configuration file.
+    *   `./outputs`: All generated audio files are saved here.
+    *   `./logs`: Server log files for troubleshooting.
+    *   `hf_cache` (Named Volume): Persists the downloaded Hugging Face models, saving significant time on rebuilds.
+
+### Verify GPU Access (for NVIDIA users)
+
+After starting the GPU container, you can verify that Docker and the application can see your graphics card.
+
+```bash
+# Check if the container can see the NVIDIA GPU
+docker compose exec kitten-tts-server nvidia-smi
+
+# Check if PyTorch inside the container can access CUDA
+docker compose exec kitten-tts-server python -c "import torch; print(f'CUDA available: {torch.cuda.is_available()}')"
+```
+If `CUDA available:` prints `True`, your GPU setup is working correctly
 
 ## 💡 Usage Guide
 
@@ -306,5 +362,6 @@ Contributions, issues, and feature requests are welcome! Please feel free to ope
 ## ⭐ Star History
 
 If you find this project useful, please consider giving it a star on GitHub!
+
 
 [![Star History Chart](https://api.star-history.com/svg?repos=devnen/Kitten-TTS-Server&type=Date)](https://star-history.com/#devnen/Kitten-TTS-Server&Date)
