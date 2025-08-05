@@ -1,0 +1,31 @@
+# requirements-nvidia.txt (NVIDIA GPU Installation)
+
+# KittenTTS Core Dependencies (GPU Version)
+onnxruntime-gpu
+soundfile
+numpy
+huggingface_hub
+phonemizer
+misaki[en]>=0.9.4
+espeakng_loader==0.2.0
+
+# Web Framework
+fastapi
+uvicorn[standard]
+
+# Configuration & Utilities
+PyYAML
+python-multipart
+requests
+Jinja2
+watchdog
+aiofiles
+unidecode
+inflect
+tqdm
+hf-transfer
+pydub
+librosa
+praat-parselmouth
+torch
+torchaudio

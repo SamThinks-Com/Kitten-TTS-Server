@@ -1,0 +1,31 @@
+# requirements.txt (CPU Installation)
+
+# Web Framework
+fastapi
+uvicorn[standard]
+
+# KittenTTS Core Dependencies
+onnxruntime
+soundfile
+numpy
+huggingface_hub
+phonemizer
+misaki[en]>=0.9.4
+espeakng_loader==0.2.0
+
+# Configuration & Utilities
+PyYAML
+python-multipart
+requests
+Jinja2
+watchdog
+aiofiles
+unidecode
+inflect
+tqdm
+hf-transfer
+pydub
+librosa
+praat-parselmouth
+torch
+torchaudio
