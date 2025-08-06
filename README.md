@@ -471,20 +471,3 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 ## 🤝 Contributing
 
 Contributions, issues, and feature requests are welcome! Please feel free to open an issue or submit a pull request.
-
----
-## ⭐ Star History
-
-If you find this project useful, please consider giving it a star on GitHub!
-
-
-[![Star History Chart](https://api.star-history.com/svg?repos=devnen/Kitten-TTS-Server&type=Date)](https://star-history.com/#devnen/Kitten-TTS-Server&Date)
-
-
-
-
-
-
-
-
-
