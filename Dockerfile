@@ -5,7 +5,6 @@ FROM nvidia/cuda:12.1.1-runtime-ubuntu22.04
 # Define a build-time argument to switch between CPU and GPU installation
 ARG RUNTIME=nvidia
 
-
 # Set environment variables for Python and Hugging Face
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
