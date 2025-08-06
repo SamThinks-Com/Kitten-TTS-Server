@@ -1,6 +1,6 @@
 # Kitten TTS Server: High-Performance, Lightweight TTS with GPU Acceleration
 
-**Self-host the ultra-lightweight [KittenTTS model](https://github.com/KittenML/KittenTTS) with this enhanced FastAPI server! Features an intuitive Web UI, a flexible API, large text processing for audiobooks, and uniquely, high-performance GPU acceleration.**
+**Self-host the ultra-lightweight [KittenTTS model](https://github.com/KittenML/KittenTTS) with this enhanced API server. Features an intuitive Web UI, a flexible API, large text processing for audiobooks, and uniquely, high-performance GPU acceleration.**
 
 This server provides a robust, user-friendly, and powerful interface for the `kitten-tts` engine, an open-source, realistic text-to-speech model with just 15 million parameters. This project significantly enhances the original model by adding a full-featured server, an easy-to-use UI, and an optimized inference pipeline for both CPU and NVIDIA GPUs.
 
@@ -365,3 +365,4 @@ If you find this project useful, please consider giving it a star on GitHub!
 
 
 [![Star History Chart](https://api.star-history.com/svg?repos=devnen/Kitten-TTS-Server&type=Date)](https://star-history.com/#devnen/Kitten-TTS-Server&Date)
+
