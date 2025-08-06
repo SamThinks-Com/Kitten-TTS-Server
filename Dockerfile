@@ -13,21 +13,25 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV HF_HOME=/app/hf_cache
 
 # Install system dependencies required for the application
-# FIX: Changed 'python3.10-pip' to the correct package name 'python3-pip'
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     libsndfile1 \
     ffmpeg \
-    python3.10 \
-    python3-pip \
-    python3.10-venv \
     git \
+    software-properties-common \
+    espeak-ng \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Create symlinks to make python3.10 the default python and pip
-RUN ln -s /usr/bin/python3.10 /usr/bin/python \
-    && ln -s /usr/bin/pip3 /usr/bin/pip
+RUN add-apt-repository --yes ppa:deadsnakes/ppa && apt-get update --yes --quiet
+RUN DEBIAN_FRONTEND=noninteractive apt-get install --yes --quiet --no-install-recommends \
+    python3.10 \
+    pip
+
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 999 \
+    && update-alternatives --config python3 && ln -s /usr/bin/python3 /usr/bin/python
+
+RUN pip install --upgrade pip
 
 # Set the working directory inside the container
 WORKDIR /app
