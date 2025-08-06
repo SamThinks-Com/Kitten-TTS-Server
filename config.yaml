@@ -45,7 +45,7 @@ tts_engine:
   # - "auto": (Recommended) Automatically uses an NVIDIA GPU if one is detected, otherwise falls back to the CPU.
   # - "cuda" or "gpu": Explicitly forces the use of an NVIDIA GPU. The server will fail to start if one is not available.
   # - "cpu": Forces the use of the CPU, even if a powerful GPU is present.
-  device: cpu
+  device: auto
 
 # --- File Path Settings ---
 # Defines where the application should store various files.
@@ -133,3 +133,4 @@ debug:
   # as a separate file in the 'outputs' directory before they are stitched together.
   # This is extremely useful for diagnosing issues with a specific part of a long text.
   save_intermediate_audio: false
+
