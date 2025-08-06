@@ -2,7 +2,7 @@
 
 **Self-host the ultra-lightweight [KittenTTS model](https://github.com/KittenML/KittenTTS) with this enhanced API server. Features an intuitive Web UI, a flexible API, large text processing for audiobooks, and uniquely, high-performance GPU acceleration.**
 
-This server provides a robust, user-friendly, and powerful interface for the `kitten-tts` engine, an open-source, realistic text-to-speech model with just 15 million parameters. This project significantly enhances the original model by adding a full-featured server, an easy-to-use UI, and an optimized inference pipeline for both CPU and NVIDIA GPUs.
+This server provides a robust, user-friendly, and powerful interface for the kitten-tts engine, an open-source, realistic text-to-speech model with just 15 million parameters. This project significantly enhances the original model by adding a full-featured server, an easy-to-use UI, and an optimized inference pipeline for hardware ranging from NVIDIA GPUs to CPUs and even the Raspberry Pi 5 (RP5) and Raspberry Pi 4 (RP4).
 
 [![Project Link](https://img.shields.io/badge/GitHub-devnen/Kitten--TTS--Server-blue?style=for-the-badge&logo=github)](https://github.com/devnen/Kitten-TTS-Server)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
@@ -423,6 +423,7 @@ If you find this project useful, please consider giving it a star on GitHub!
 
 
 [![Star History Chart](https://api.star-history.com/svg?repos=devnen/Kitten-TTS-Server&type=Date)](https://star-history.com/#devnen/Kitten-TTS-Server&Date)
+
 
 
 
