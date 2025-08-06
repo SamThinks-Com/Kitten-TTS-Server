@@ -35,7 +35,7 @@ We solve the complexity of setting up and running the model by offering:
 *   **Cross-platform support** for Windows and Linux, with clear setup instructions.
 *   **Docker support** for easy, reproducible containerized deployment.
 
-## 🔥 Groundbreaking GPU Acceleration
+## 🔥 GPU Acceleration included
 
 A standout feature of this server is the implementation of **high-performance GPU acceleration**, a capability not available in the original KittenTTS project. While the base model is CPU-only, this server unlocks the full potential of your hardware.
 
@@ -368,5 +368,6 @@ If you find this project useful, please consider giving it a star on GitHub!
 
 
 [![Star History Chart](https://api.star-history.com/svg?repos=devnen/Kitten-TTS-Server&type=Date)](https://star-history.com/#devnen/Kitten-TTS-Server&Date)
+
 
 
