@@ -165,6 +165,48 @@ If `CUDA available:` shows `True`, your setup is correct!
 
 ---
 
+### **Option 3: Upgrading from CPU to GPU**
+
+If you initially installed the server for CPU-only usage and now want to enable GPU acceleration, follow these steps to upgrade your environment safely.
+
+```bash
+# Make sure your (venv) is active
+pip install --upgrade pip
+
+# Step 1: Uninstall the CPU-only versions of onnxruntime and torch.
+# This is critical to prevent conflicts with the GPU packages.
+pip uninstall onnxruntime torch torchaudio -y
+
+# Step 2: Install the GPU-enabled ONNX Runtime.
+pip install onnxruntime-gpu
+
+# Step 3: Install PyTorch with CUDA support. This command also brings the
+# necessary CUDA and cuDNN .dll files that onnxruntime-gpu needs.
+pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu121
+
+# Step 4: Re-install from the nvidia requirements file to ensure all other
+# dependencies are correct and up to date.
+pip install -r requirements-nvidia.txt
+```
+
+**After upgrading, do the following:**
+
+1.  **Verify the installation** by running the same check from Option 2:
+    ```bash
+    python -c "import torch; print(f'CUDA available: {torch.cuda.is_available()}')"
+    ```
+    The output must be `CUDA available: True`.
+
+2.  **Update your configuration** by editing the `config.yaml` file:
+    ```yaml
+    tts_engine:
+      device: auto  # Or "cuda", or "gpu"
+    ```
+
+3.  **Restart the server** for the changes to take effect. It will now use your NVIDIA GPU.
+
+---
+
 ## ▶️ Running the Server
 
 **Important: First-Run Model Download**
@@ -368,6 +410,7 @@ If you find this project useful, please consider giving it a star on GitHub!
 
 
 [![Star History Chart](https://api.star-history.com/svg?repos=devnen/Kitten-TTS-Server&type=Date)](https://star-history.com/#devnen/Kitten-TTS-Server&Date)
+
 
 
 
