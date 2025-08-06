@@ -97,7 +97,7 @@ ui_state:
 
     '
   # The ID of the last voice you selected from the dropdown.
-  last_voice: expr-voice-3-f
+  last_voice: expr-voice-2-m
   # The last value you set for the "Chunk Size" slider, used for large text processing.
   last_chunk_size: 200
   
@@ -133,4 +133,5 @@ debug:
   # as a separate file in the 'outputs' directory before they are stitched together.
   # This is extremely useful for diagnosing issues with a specific part of a long text.
   save_intermediate_audio: false
+
 
