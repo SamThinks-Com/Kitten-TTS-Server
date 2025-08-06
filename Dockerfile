@@ -5,6 +5,7 @@ FROM nvidia/cuda:12.1.1-runtime-ubuntu22.04
 # Define a build-time argument to switch between CPU and GPU installation
 ARG RUNTIME=nvidia
 
+
 # Set environment variables for Python and Hugging Face
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
@@ -13,12 +14,13 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV HF_HOME=/app/hf_cache
 
 # Install system dependencies required for the application
+# FIX: Changed 'python3.10-pip' to the correct package name 'python3-pip'
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     libsndfile1 \
     ffmpeg \
     python3.10 \
-    python3.10-pip \
+    python3-pip \
     python3.10-venv \
     git \
     && apt-get clean \
