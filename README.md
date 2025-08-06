@@ -78,6 +78,22 @@ This enhancement transforms KittenTTS from a lightweight-but-modest engine into 
 *   **💾 UI State Persistence:** The web interface remembers your last-used text, voice, and settings to streamline your workflow.
 *   **🐳 Docker Support:** Easy, reproducible deployment for both CPU and GPU via Docker Compose.
 
+## 🔄 Alternative to Piper TTS
+
+The [KittenTTS model](https://github.com/KittenML/KittenTTS) serves as an excellent alternative to [Piper TTS](https://github.com/rhasspy/piper) for fast generation on limited compute and edge devices like Raspberry Pi 5.
+
+**KittenTTS Model Advantages:**
+- **Extreme Efficiency**: Just 15 million parameters and under 25MB, significantly smaller than most Piper models
+- **Universal Compatibility**: CPU-optimized to run without GPU on any device and "works literally everywhere"
+- **Real-time Performance**: Optimized for real-time speech synthesis even on resource-constrained hardware
+
+**This Server Project's Enhancement:**
+While KittenTTS provides the ultra-lightweight foundation, this server transforms it into a production-ready Piper replacement by adding GPU acceleration (unavailable in the base model), modern REST/OpenAI APIs, audiobook processing capabilities, and an intuitive web interface—all while maintaining the model's edge device compatibility.
+
+Perfect for users seeking Piper's offline capabilities with better performance on limited hardware and modern server infrastructure.
+
+---
+
 ## 🔩 System Prerequisites
 
 *   **Operating System:** Windows 10/11 (64-bit) or Linux (Debian/Ubuntu recommended).
@@ -471,3 +487,4 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 ## 🤝 Contributing
 
 Contributions, issues, and feature requests are welcome! Please feel free to open an issue or submit a pull request.
+
