@@ -11,7 +11,8 @@ from pathlib import Path
 from huggingface_hub import hf_hub_download
 import phonemizer
 
-# ... other imports
+# This loader can be problematic on Linux, we will bypass it with system-installed eSpeak.
+# We still import it as it's a dependency, but we will avoid calling it directly where possible.
 import espeakng_loader
 
 # Import the singleton config_manager
@@ -143,52 +144,64 @@ def load_model() -> bool:
         providers = []
         provider_options = []
 
-        # Priority: Check for requested GPU first.
-        if device_setting in ["cuda", "gpu"]:
-            if "CUDAExecutionProvider" in available_providers:
-                logger.info(
-                    "Configuration requests GPU, and CUDAExecutionProvider is available."
-                )
-                logger.info(
-                    "Configuring CUDAExecutionProvider with pinned memory for optimal performance."
-                )
-                providers = ["CUDAExecutionProvider", "CPUExecutionProvider"]
-                provider_options = [
-                    {
-                        "device_id": "0",
-                        "gpu_mem_type": "pinned",
-                    },
-                    {},
-                ]
-            else:
-                logger.warning(
-                    "Configuration requests GPU, but CUDAExecutionProvider is NOT available. "
-                    "Ensure you have a compatible NVIDIA driver, CUDA Toolkit, and cuDNN installed. "
-                    "Falling back to CPU."
-                )
-                providers = ["CPUExecutionProvider"]
+        # A boolean flag to check if we should attempt to use the GPU
+        attempt_gpu = device_setting in ["auto", "cuda", "gpu"]
+        is_gpu_available = "CUDAExecutionProvider" in available_providers
 
-        # If providers list is still empty, it means GPU was not requested. Default to CPU.
-        if not providers:
-            logger.info("Using ONNX Runtime with CPUExecutionProvider.")
+        # The primary condition: attempt to use GPU and check if it's available
+        if attempt_gpu and is_gpu_available:
+            logger.info(
+                f"'{device_setting}' mode selected and CUDAExecutionProvider is available."
+            )
+            logger.info("Configuring CUDAExecutionProvider for optimal performance.")
+            providers = ["CUDAExecutionProvider", "CPUExecutionProvider"]
+            provider_options = [
+                {
+                    "device_id": "0",
+                },
+                {},
+            ]
+        else:
+            # Fallback to CPU for all other cases
+            if device_setting in ["cuda", "gpu"] and not is_gpu_available:
+                logger.warning(
+                    f"Configuration explicitly requests GPU ('{device_setting}'), but CUDAExecutionProvider is NOT available."
+                )
+                logger.warning(
+                    "Please ensure NVIDIA drivers and the correct dependencies are installed."
+                )
+
+            logger.info("Defaulting to CPUExecutionProvider.")
             providers = ["CPUExecutionProvider"]
 
         # Initialize the ONNX Inference Session with the chosen providers and options
         logger.info(
             f"Initializing ONNX InferenceSession from {model_path} with providers: {providers}"
         )
-        onnx_session = ort.InferenceSession(
-            str(model_path),
-            sess_options,
-            providers=providers,
-            provider_options=provider_options,
-        )
+
+        # Only pass provider_options if the GPU provider is being used
+        if "CUDAExecutionProvider" in providers:
+            onnx_session = ort.InferenceSession(
+                str(model_path),
+                sess_options,
+                providers=providers,
+                provider_options=provider_options,
+            )
+        else:
+            # For CPU-only, do not pass the provider_options argument
+            onnx_session = ort.InferenceSession(
+                str(model_path),
+                sess_options,
+                providers=providers,
+            )
+
+        # --- Cross-Platform eSpeak Configuration ---
+        # This block ensures that on both Windows and Linux, the correct eSpeak library
+        # and data files are found and configured, bypassing potential issues with loaders.
 
         # Auto-configure eSpeak for Windows
         if os.name == "nt":  # Windows
-            import platform
-
-            # Common eSpeak installation paths on Windows
+            logger.info("Checking for eSpeak NG on Windows...")
             possible_paths = [
                 Path(r"C:\Program Files\eSpeak NG"),
                 Path(r"C:\Program Files (x86)\eSpeak NG"),
@@ -196,58 +209,38 @@ def load_model() -> bool:
                 Path(os.environ.get("ProgramFiles", "")) / "eSpeak NG",
                 Path(os.environ.get("ProgramFiles(x86)", "")) / "eSpeak NG",
             ]
-
             espeak_found = False
             for espeak_path in possible_paths:
                 if espeak_path.exists():
                     dll_path = espeak_path / "libespeak-ng.dll"
-                    data_path = espeak_path / "espeak-ng-data"
-
                     if dll_path.exists():
-                        # Set environment variables for phonemizer
                         os.environ["PHONEMIZER_ESPEAK_LIBRARY"] = str(dll_path)
-                        os.environ["PHONEMIZER_ESPEAK_PATH"] = str(
-                            espeak_path / "espeak-ng.exe"
-                        )
-
-                        # Configure phonemizer's EspeakWrapper
                         from phonemizer.backend.espeak.wrapper import (
                             EspeakWrapper as PhonemizeEspeakWrapper,
                         )
 
                         PhonemizeEspeakWrapper.set_library(str(dll_path))
-
                         logger.info(f"Auto-configured eSpeak from: {espeak_path}")
                         espeak_found = True
                         break
-
             if not espeak_found:
-                logger.warning(
-                    "eSpeak NG not found in common locations on Windows. "
-                    "Please install from: https://github.com/espeak-ng/espeak-ng/releases "
-                    "Choose the .msi installer for your system (usually 64-bit)."
-                )
-                # Try to proceed anyway - espeakng_loader might find it
+                logger.warning("eSpeak NG not found in common Windows locations.")
 
-        try:
-            # Import only when needed to avoid issues if misaki is not fully installed
-            import misaki.espeak
-
-            espeak_data_path = espeakng_loader.get_data_path()
-            # Check if the class and the specific attribute exist before setting
-            if hasattr(misaki.espeak, "EspeakWrapper") and hasattr(
-                misaki.espeak.EspeakWrapper, "data_path"
-            ):
-                misaki.espeak.EspeakWrapper.data_path = espeak_data_path
+        # Auto-configure eSpeak for Linux by finding the system-installed library
+        elif os.name == "posix":  # Linux/macOS
+            logger.info("Checking for system-installed eSpeak NG on Linux...")
+            # By setting the library path, we let phonemizer handle finding the data path, which is more robust.
+            espeak_lib_path = "/usr/lib/x86_64-linux-gnu/libespeak-ng.so"
+            if Path(espeak_lib_path).exists():
+                os.environ["PHONEMIZER_ESPEAK_LIBRARY"] = espeak_lib_path
                 logger.info(
-                    f"eSpeak data path configured for misaki: {espeak_data_path}"
+                    f"Found and configured system eSpeak NG library: {espeak_lib_path}"
                 )
             else:
                 logger.warning(
-                    "misaki.espeak.EspeakWrapper.data_path attribute not found. Skipping configuration."
+                    f"Could not find system eSpeak NG library at {espeak_lib_path}. "
+                    "Please ensure 'espeak-ng' is installed via your package manager."
                 )
-        except Exception as e:
-            logger.warning(f"Could not auto-configure misaki eSpeak data path: {e}")
 
         # Initialize phonemizer with better error handling
         try:
@@ -347,34 +340,40 @@ def synthesize(
         provider = onnx_session.get_providers()[0]
 
         if provider == "CUDAExecutionProvider":
-            # --- I/O Binding Path for GPU ---
-            # Create torch tensors directly on the GPU
-            device = "cuda"
-            input_ids = torch.tensor([tokens], dtype=torch.int64, device=device)
-            ref_s = torch.tensor(voices_data[voice], device=device)
-            speed_array = torch.tensor([speed], dtype=torch.float32, device=device)
+            # --- I/O Binding Path for GPU using NumPy ---
+            # Create standard NumPy arrays on the CPU first.
+            input_ids_np = np.array([tokens], dtype=np.int64)
+            ref_s_np = voices_data[voice].astype(np.float32)  # Ensure correct type
+            speed_array_np = np.array([speed], dtype=np.float32)
 
-            # Create OrtValues from torch tensors without copying data
-            input_ids_ort = ort.OrtValue.ortvalue_from_pytorch(input_ids)
-            ref_s_ort = ort.OrtValue.ortvalue_from_pytorch(ref_s)
-            speed_array_ort = ort.OrtValue.ortvalue_from_pytorch(speed_array)
+            # Create OrtValues from the NumPy arrays. I/O binding will handle the copy to GPU.
+            input_ids_ort = ort.OrtValue.ortvalue_from_numpy(input_ids_np, "cuda", 0)
+            ref_s_ort = ort.OrtValue.ortvalue_from_numpy(ref_s_np, "cuda", 0)
+            speed_array_ort = ort.OrtValue.ortvalue_from_numpy(
+                speed_array_np, "cuda", 0
+            )
 
             # Set up I/O binding
             io_binding = onnx_session.io_binding()
 
-            # Bind inputs
+            # Bind the OrtValue inputs
             io_binding.bind_ortvalue_input("input_ids", input_ids_ort)
             io_binding.bind_ortvalue_input("style", ref_s_ort)
             io_binding.bind_ortvalue_input("speed", speed_array_ort)
 
-            # Bind output to the GPU
-            io_binding.bind_output("output", "cuda")
+            # Get the actual name of the first output from the loaded model
+            output_name = onnx_session.get_outputs()[0].name
+
+            # Bind the output to the GPU using the correct name
+            io_binding.bind_output(output_name, "cuda")
 
             # Run inference with binding
-            output_ortvalue = onnx_session.run_with_iobinding(io_binding)[0]
+            onnx_session.run_with_iobinding(io_binding)
+
+            # Get the output from the binding
+            output_ortvalue = io_binding.get_outputs()[0]
 
             # The output is on the GPU. Copy it back to the CPU to be used by the rest of the app.
-            # This is the ONLY data copy in the GPU path.
             audio = output_ortvalue.numpy()
 
         else:
