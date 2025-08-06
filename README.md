@@ -35,6 +35,16 @@ We solve the complexity of setting up and running the model by offering:
 *   **Cross-platform support** for Windows and Linux, with clear setup instructions.
 *   **Docker support** for easy, reproducible containerized deployment.
 
+## 🍓 Raspberry Pi & Edge Device Support
+
+The ultra-lightweight nature of the KittenTTS model and the efficiency of this server make it a perfect candidate for running on single-board computers (SBCs) and other edge devices.
+
+*   ✅ **Raspberry Pi 5 (RP5):** Confirmed to run with **excellent performance**. The server is fast and responsive, easily handling requests from other devices on the same local network (LAN). This makes it ideal for local network services, home automation, and other DIY projects.
+
+*   ⏳ **Raspberry Pi 4 (RP4):** Testing is currently in progress. Performance is expected to be very usable and suitable for many applications.
+
+To install, simply follow the standard **Linux installation guide** provided in this README.
+
 ## 🔥 GPU Acceleration included
 
 A standout feature of this server is the implementation of **high-performance GPU acceleration**, a capability not available in the original KittenTTS project. While the base model is CPU-only, this server unlocks the full potential of your hardware.
@@ -76,6 +86,9 @@ This enhancement transforms KittenTTS from a lightweight-but-modest engine into 
 *   **eSpeak NG:** This is a **required** dependency for text phonemization.
     *   **Windows:** See installation guide below.
     *   **Linux:** `sudo apt install espeak-ng`
+*   **Raspberry Pi:**
+    *   Raspberry Pi 5
+    *   Raspberry Pi 4      
 *   **(For GPU Acceleration):**
     *   An **NVIDIA GPU** with CUDA support.
 *   **(For Linux Only):**
@@ -410,6 +423,7 @@ If you find this project useful, please consider giving it a star on GitHub!
 
 
 [![Star History Chart](https://api.star-history.com/svg?repos=devnen/Kitten-TTS-Server&type=Date)](https://star-history.com/#devnen/Kitten-TTS-Server&Date)
+
 
 
 
