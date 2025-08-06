@@ -61,13 +61,13 @@ paths:
 generation_defaults:
   # The default speed of the generated speech.
   # 1.0 is normal speed. > 1.0 is faster, < 1.0 is slower.
-  speed: 1.0
+  speed: 1.1
   
   # Default language for the phonemizer. The current model is trained for English.
   language: en
   
   # This is a legacy/duplicate setting. Please use the 'speed' setting above.
-  speed_factor: 1.0
+  speed_factor: 1.1
 
 # --- Audio Output Settings ---
 # Controls the format and quality of the final audio file.
@@ -97,8 +97,7 @@ ui_state:
 
     '
   # The ID of the last voice you selected from the dropdown.
-  last_voice: expr-voice-2-f
-  
+  last_voice: expr-voice-3-f
   # The last value you set for the "Chunk Size" slider, used for large text processing.
   last_chunk_size: 200
   
