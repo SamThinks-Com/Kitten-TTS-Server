@@ -31,7 +31,7 @@ We solve the complexity of setting up and running the model by offering:
 *   **True GPU Acceleration** for NVIDIA GPUs, a feature not present in the original implementation.
 *   **Large Text Handling & Audiobook Generation:** Intelligently splits long texts into manageable chunks, processes them sequentially, and seamlessly concatenates the audio. Perfect for creating complete audiobooks.
 *   **A flexible, dual-API system** including a simple endpoint and an OpenAI-compatible endpoint for easy integration.
-*   **Curated High-Quality Voices:** A fixed list of 8 ready-to-use synthetic voices for consistent and reliable output.
+*   **Built-in Voices:** A fixed list of 8 ready-to-use voices for consistent and reliable output.
 *   **Cross-platform support** for Windows and Linux, with clear setup instructions.
 *   **Docker support** for easy, reproducible containerized deployment.
 
@@ -410,6 +410,7 @@ If you find this project useful, please consider giving it a star on GitHub!
 
 
 [![Star History Chart](https://api.star-history.com/svg?repos=devnen/Kitten-TTS-Server&type=Date)](https://star-history.com/#devnen/Kitten-TTS-Server&Date)
+
 
 
 
