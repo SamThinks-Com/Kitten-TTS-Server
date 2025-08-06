@@ -56,8 +56,8 @@ This enhancement transforms KittenTTS from a lightweight-but-modest engine into 
 *   **🖥️ Modern Web Interface:**
     *   Intuitive UI for text input, voice selection, and parameter adjustment.
     *   Real-time waveform visualization of generated audio.
-*   **🎤 8 High-Quality Voices:**
-    *   Utilizes the 8 curated, built-in voices from the KittenTTS model (4 male, 4 female).
+*   **🎤 8 Built-in Voices:**
+    *   Utilizes the 8 built-in voices from the KittenTTS model (4 male, 4 female).
     *   Easily selectable via a UI dropdown menu.
 *   **⚙️ Dual API Endpoints:**
     *   A primary `/tts` endpoint offering full control over all generation parameters.
@@ -410,6 +410,7 @@ If you find this project useful, please consider giving it a star on GitHub!
 
 
 [![Star History Chart](https://api.star-history.com/svg?repos=devnen/Kitten-TTS-Server&type=Date)](https://star-history.com/#devnen/Kitten-TTS-Server&Date)
+
 
 
 
