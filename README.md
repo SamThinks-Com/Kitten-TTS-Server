@@ -41,7 +41,7 @@ The ultra-lightweight nature of the KittenTTS model and the efficiency of this s
 
 *   ✅ **Raspberry Pi 5 (RP5):** Confirmed to run with **excellent performance**. The server is fast and responsive, easily handling requests from other devices on the same local network (LAN). This makes it ideal for local network services, home automation, and other DIY projects.
 
-*   ⏳ **Raspberry Pi 4 (RP4):** Testing is currently in progress. Performance is expected to be very usable and suitable for many applications.
+*   ⏳ **Raspberry Pi 4 (RP4):** Testing is currently in progress. Not working on the 32-bit Raspberry Pi OS.
 
 To install, simply follow the standard **Linux installation guide** provided in this README.
 
@@ -240,6 +240,62 @@ The first time you start the server, it will automatically download the KittenTT
 
 4.  **To stop the server:** Press `CTRL+C` in the terminal.
 
+### **Raspberry Pi 4 & 5 Installation (CPU-Only)**
+
+KittenTTS runs excellently on Raspberry Pi devices, making it ideal for local network services and DIY projects. However, installation requirements vary significantly between Pi models due to CPU architecture differences.
+
+#### **Raspberry Pi 5 - Full Support ✅**
+
+**Raspberry Pi 5 works out-of-the-box** with the standard Linux installation guide above. No special steps required!
+
+**Tested Configuration:**
+- **Hardware:** Raspberry Pi 5 Model B Rev 1.0
+- **OS:** Debian GNU/Linux 12 (bookworm) 64-bit
+- **Architecture:** aarch64 (ARM64)
+- **Python:** 3.11
+- **Memory:** 4GB RAM
+- **Installation:** Follow the standard [Linux Installation](#linux-installation) guide exactly
+
+**Installation Steps:**
+```bash
+# Step 1: Install system dependencies
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y espeak-ng libsndfile1 ffmpeg python3-pip python3-venv git
+
+# Step 2: Set up Python environment
+python -m venv venv
+source venv/bin/activate
+
+# Step 3: Install Python dependencies
+pip install -r requirements.txt
+
+# Step 4: Start the server
+python server.py
+```
+
+> **⏱️ Important:** During the `pip install -r requirements.txt` step, some Python packages (especially audio processing libraries like `librosa`, `praat-parselmouth`, and others) may need to be compiled from source on ARM architecture. This process can take **15-30 minutes** depending on your SD card speed and system load. This is normal - let it complete without interruption.
+
+#### **Raspberry Pi 4 - Limited Support ⚠️**
+
+**Raspberry Pi 4 support is currently in development** due to complex dependency compilation issues on 32-bit ARM architecture.
+
+**Known Technical Challenges:**
+- **ONNX Runtime:** No official ARM wheels available on PyPI
+- **PyTorch Ecosystem:** Limited pre-built wheel availability for armv7l
+- **NLP Dependencies:** SpaCy and related libraries fail to compile due to architecture detection issues
+- **Audio Processing:** Some native audio libraries require manual compilation
+
+**Current Status:**
+- ✅ **64-bit Raspberry Pi OS:** May work with standard installation (limited testing)  
+- ⚠️ **32-bit Raspberry Pi OS:** Requires complex manual dependency resolution
+- 🔧 **Alternative Solutions:** Being developed for core functionality
+
+**For Raspberry Pi 4 Users:**
+We recommend upgrading to **64-bit Raspberry Pi OS** if possible, as this significantly improves compatibility with modern Python packages. For users requiring 32-bit support, please check our [GitHub Issues](link-to-issues) for the latest progress updates and community-contributed solutions.
+
+**Alternative Recommendation:**
+For the best Raspberry Pi TTS experience, we strongly recommend using a **Raspberry Pi 5** with the standard 64-bit OS, which provides excellent performance and full compatibility.
+
 ## 🐳 Docker Installation
 
 Run Kitten-TTS-Server easily using Docker. The recommended method uses Docker Compose, which is pre-configured for both CPU and NVIDIA GPU deployment.
@@ -423,6 +479,7 @@ If you find this project useful, please consider giving it a star on GitHub!
 
 
 [![Star History Chart](https://api.star-history.com/svg?repos=devnen/Kitten-TTS-Server&type=Date)](https://star-history.com/#devnen/Kitten-TTS-Server&Date)
+
 
 
 
