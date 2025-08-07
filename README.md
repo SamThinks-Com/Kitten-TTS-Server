@@ -1,4 +1,4 @@
-# Kitten TTS Server: High-Performance, Lightweight TTS with GPU Acceleration
+# Kitten TTS Server: High-Performance, Lightweight TTS with API and GPU Acceleration
 
 **Self-host the ultra-lightweight [KittenTTS model](https://github.com/KittenML/KittenTTS) with this enhanced API server. Features an intuitive Web UI, a flexible API, large text processing for audiobooks, and uniquely, high-performance GPU acceleration.**
 
@@ -487,5 +487,6 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 ## 🤝 Contributing
 
 Contributions, issues, and feature requests are welcome! Please feel free to open an issue or submit a pull request.
+
 
 
